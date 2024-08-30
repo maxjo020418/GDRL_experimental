@@ -135,3 +135,9 @@ script = ExtResource("4_skyph")
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 zoom = Vector2(2, 2)
+
+[node name="AgentStartButton" type="Button" parent="."]
+offset_left = 416.0
+offset_right = 549.0
+offset_bottom = 31.0
+text = "Start Agent!"

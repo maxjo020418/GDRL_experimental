@@ -1,22 +1,26 @@
 extends Node2D
 
 @onready var tilemap: TileMapLayer = $"../tilemap"
+@onready var asbt: Button = $"../AgentStartButton"
 
 signal update_label
 
 static var GOAL_STATE: Vector2i = Vector2i(4,1)
+static var START_STATE: Vector2i = Vector2i(1,3)
 
 var state_tile_vecs: Array[Vector2i]
 var V: Dictionary = {}
 var pi: Dictionary = {}
+var pi_default = {
+	Vector2i.UP:	.25,
+	Vector2i.DOWN:	.25,
+	Vector2i.RIGHT:	.25,
+	Vector2i.LEFT:	.25,
+}
 
 func _ready() -> void:
-	var pi_default = {
-		Vector2i.UP:	.25,
-		Vector2i.DOWN:	.25,
-		Vector2i.RIGHT:	.25,
-		Vector2i.LEFT:	.25,
-	}
+	asbt.connect('pressed', run_agent)
+	
 	# fill in all the values for V and pi
 	for cell_vec: Vector2i in tilemap.get_used_cells():
 		var cell_data: TileData = tilemap.get_cell_tile_data(cell_vec)
@@ -28,8 +32,9 @@ func _ready() -> void:
 	state_tile_vecs.sort()
 	
 	# eval_onestep()
-	policy_eval()
-	emit_signal('update_label')
+	# policy_eval()
+	# policy_iter()
+	# emit_signal('update_label')
 	
 	print('AGENT READY')
 
@@ -80,7 +85,83 @@ func policy_eval(gamma: float = .9, thresh: float = .001) -> Dictionary:
 		
 		count += 1
 	
+	print('policy_eval count: ', count)
 	return V
+
+
+func argmax(dictionary: Dictionary) -> Variant:
+	var max_key = null
+	var max_value = -INF
+	
+	for key in dictionary.keys():
+		var value = dictionary[key]
+		if value > max_value:
+			max_value = value
+			max_key = key
+	
+	return max_key
+
+func greedy_policy(gamma: float) -> Dictionary:
+	var _pi: Dictionary = {}
+	
+	for state_tile_vec in state_tile_vecs:
+		var action_values: Dictionary = {}
+		
+		for action: Vector2i in pi_default:
+			var next_state_tile_vec: Vector2i = state_tile_vec + action
+			var next_state_tile_data: TileData = tilemap.get_cell_tile_data(next_state_tile_vec)
+			
+			var r: float
+			if next_state_tile_data.get_custom_data('moveable'):
+				r = next_state_tile_data.get_custom_data('reward')
+			else:  # wall or immovable
+				r = next_state_tile_data.get_custom_data('reward')
+				next_state_tile_vec = state_tile_vec
+			
+			var value: float = r + gamma * V[next_state_tile_vec]
+			action_values[action] = value
+		
+		var max_action: Vector2i = argmax(action_values)
+		var action_probs: Dictionary = {
+			Vector2i.UP:	0,
+			Vector2i.DOWN:	0,
+			Vector2i.RIGHT:	0,
+			Vector2i.LEFT:	0,
+		}
+		action_probs[max_action] = 1.0
+		_pi[state_tile_vec] = action_probs
+	
+	return _pi
+
+func policy_iter(gamma: float = .9, thresh: float = .001) -> Dictionary:
+	var count: int = 1
+	while true:
+		V = policy_eval(gamma, thresh)
+		var new_pi = greedy_policy(gamma)
+		
+		count += 1
+		if new_pi == pi:
+			break
+		pi = new_pi
+	
+	print('policy_iter count: ', count)
+	return pi
+
+func run_agent() -> void:
+	print('running agent!')
+	move_to(START_STATE)
+	policy_iter()
+	emit_signal('update_label')
+	
+	var curr_tile: Vector2i = tilemap.local_to_map(global_position)
+	
+	while curr_tile != GOAL_STATE:
+		await get_tree().create_timer(.5).timeout 
+		var move_dir: Vector2i = argmax(pi[curr_tile])
+		move(move_dir)
+		curr_tile += move_dir
+	
+	print('done!')
 
 ################################################################################
 
@@ -94,12 +175,19 @@ var movements_kb = {
 func _unhandled_input(event: InputEvent) -> void:
 	for movement: StringName in movements_kb.keys():
 		if event.is_action_pressed(movement):
-			move(movement)
+			move(movements_kb[movement])
 
-func move(movement: StringName) -> void:
+func move(movement: Vector2i) -> void:
 	# coords relative to the tilemap!
 	var curr_tile: Vector2i = tilemap.local_to_map(global_position)
-	var next_tile: Vector2i = curr_tile + movements_kb[movement]
+	var next_tile: Vector2i = curr_tile + movement
+	# check if moveable
+	if state_tile_vecs.has(next_tile):
+		global_position = tilemap.map_to_local(next_tile)
+
+func move_to(coords: Vector2i) -> void:
+	# coords relative to the tilemap!
+	var next_tile: Vector2i = coords
 	# check if moveable
 	if state_tile_vecs.has(next_tile):
 		global_position = tilemap.map_to_local(next_tile)

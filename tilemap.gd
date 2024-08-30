@@ -22,7 +22,7 @@ func _ready() -> void:
 		var cell_data: TileData = get_cell_tile_data(cell_vec)
 		if cell_data.get_custom_data('moveable'):
 			var label: Label = create_label()
-			label.text = str(cell_vec)
+			# label.text = str(cell_vec)
 			label.set_meta('cell_vec', cell_vec)
 			label.global_position = map_to_local(cell_vec)
 			add_child(label)
@@ -34,8 +34,11 @@ func update_label() -> void:
 		var cell_vec: Vector2i = label.get_meta('cell_vec')
 		label.text = str(round_to_dec(agent.V[cell_vec], 2), '\n', cell_vec)
 
+func round_to_dec(num, digit):
+		return round(num * pow(10.0, digit)) / pow(10.0, digit)
+
 func _process(delta: float) -> void:
 	pass
 
-func round_to_dec(num, digit):
-		return round(num * pow(10.0, digit)) / pow(10.0, digit)
+func _physics_process(delta: float) -> void:
+	pass
