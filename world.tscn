@@ -1,0 +1,137 @@
+[gd_scene load_steps=7 format=4 uid="uid://b2mfewavr15u8"]
+
+[ext_resource type="Texture2D" uid="uid://dp67khgti2na3" path="res://sokoban_texturepack/Tilesheet/sokoban_tilesheet.png" id="1_ih71m"]
+[ext_resource type="Script" path="res://tilemap.gd" id="2_44fwm"]
+[ext_resource type="Texture2D" uid="uid://dsmr61ntwrogy" path="res://sokoban_texturepack/PNG/Default size/Player/player_01.png" id="2_71hmj"]
+[ext_resource type="Script" path="res://agent.gd" id="4_skyph"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_t7ol6"]
+texture = ExtResource("1_ih71m")
+texture_region_size = Vector2i(64, 64)
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+10:1/0 = 0
+9:1/0 = 0
+8:1/0 = 0
+7:1/0 = 0
+6:1/0 = 0
+5:1/0 = 0
+4:1/0 = 0
+3:2/0 = 0
+2:2/0 = 0
+1:2/0 = 0
+0:2/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+11:0/0 = 0
+12:1/0 = 0
+11:1/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+12:4/0 = 0
+11:4/0 = 0
+10:4/0 = 0
+9:4/0 = 0
+8:4/0 = 0
+7:4/0 = 0
+6:4/0 = 0
+5:4/0 = 0
+1:4/0 = 0
+0:4/0 = 0
+0:5/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+8:6/0 = 0
+9:6/0 = 0
+10:6/0 = 0
+10:6/0/custom_data_0 = true
+11:6/0 = 0
+11:6/0/custom_data_0 = true
+12:6/0 = 0
+12:6/0/custom_data_0 = true
+12:5/0 = 0
+11:5/0 = 0
+10:5/0 = 0
+9:5/0 = 0
+8:5/0 = 0
+7:5/0 = 0
+6:5/0 = 0
+5:5/0 = 0
+4:5/0 = 0
+3:5/0 = 0
+2:5/0 = 0
+1:5/0 = 0
+4:4/0 = 0
+3:4/0 = 0
+2:4/0 = 0
+2:7/0 = 0
+1:7/0 = 0
+0:7/0 = 0
+3:7/0 = 0
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+8:7/0 = 0
+9:7/0 = 0
+10:7/0 = 0
+10:7/0/custom_data_0 = true
+10:7/0/custom_data_1 = 1.0
+11:7/0 = 0
+11:7/0/custom_data_0 = true
+12:7/0 = 0
+12:7/0/custom_data_0 = true
+12:7/0/custom_data_1 = -1.0
+11:2/0 = 0
+12:2/0 = 0
+0:6/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_pud5t"]
+tile_size = Vector2i(64, 64)
+custom_data_layer_0/name = "moveable"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "reward"
+custom_data_layer_1/type = 3
+sources/1 = SubResource("TileSetAtlasSource_t7ol6")
+
+[node name="world" type="Node2D"]
+
+[node name="tilemap" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAAAAAAAQAHAAYAAAAAAAEAAQAHAAYAAAAFAAIAAQAHAAYAAAAFAAEAAQAHAAYAAAAFAAAAAQAHAAYAAAAEAAEAAQAKAAcAAAAEAAIAAQAMAAcAAAABAAEAAQALAAYAAAABAAIAAQALAAYAAAABAAMAAQALAAYAAAACAAMAAQALAAYAAAADAAMAAQALAAYAAAAEAAMAAQALAAYAAAADAAIAAQALAAYAAAADAAEAAQALAAYAAAACAAEAAQALAAYAAAABAAAAAQAHAAYAAAACAAAAAQAHAAYAAAADAAAAAQAHAAYAAAAEAAAAAQAHAAYAAAAFAAMAAQAHAAYAAAAFAAQAAQAHAAYAAAAEAAQAAQAHAAYAAAADAAQAAQAHAAYAAAACAAQAAQAHAAYAAAABAAQAAQAHAAYAAAAAAAQAAQAHAAYAAAAAAAMAAQAHAAYAAAAAAAIAAQAHAAYAAAACAAIAAQAGAAAAAAA=")
+tile_set = SubResource("TileSet_pud5t")
+script = ExtResource("2_44fwm")
+
+[node name="Agent" type="Sprite2D" parent="."]
+position = Vector2(96, 224)
+texture = ExtResource("2_71hmj")
+script = ExtResource("4_skyph")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+zoom = Vector2(2, 2)

@@ -1,0 +1,7 @@
+config_version=5
+
+[application]
+
+config/name="GDRL_experimental"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
