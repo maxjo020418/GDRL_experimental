@@ -1,24 +1,4 @@
-extends Node2D
-
-@onready var tilemap: TileMapLayer = $"../tilemap"
-@onready var bt_policy: Button = $"../AgentStartButton1"
-@onready var bt_value: Button = $"../AgentStartButton2"
-@onready var reset_bt: Button = $"../ResetButton"
-
-signal update_label
-
-static var GOAL_STATE: Vector2i = Vector2i(8,1)
-static var START_STATE: Vector2i = Vector2i(1,3)
-
-var state_tile_vecs: Array[Vector2i]
-var V: Dictionary = {}
-var pi: Dictionary = {}
-var pi_default = {
-	Vector2i.UP:	.25,
-	Vector2i.DOWN:	.25,
-	Vector2i.RIGHT:	.25,
-	Vector2i.LEFT:	.25,
-}
+extends AgentsTilemap
 
 func _ready() -> void:
 	bt_policy.connect('button_down', func(): run_agent(policy_iter))
@@ -222,13 +202,6 @@ func run_agent(iter_func: Callable) -> void:
 	print('done!')
 
 ################################################################################
-
-var movements_kb = {
-	'ui_up': Vector2i.UP,
-	'ui_down': Vector2i.DOWN,
-	'ui_right': Vector2i.RIGHT,
-	'ui_left': Vector2i.LEFT,
-}
 
 func _unhandled_input(event: InputEvent) -> void:
 	for movement: StringName in movements_kb.keys():

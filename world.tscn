@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=4 uid="uid://b2mfewavr15u8"]
+[gd_scene load_steps=10 format=4 uid="uid://b2mfewavr15u8"]
 
 [ext_resource type="Texture2D" uid="uid://dp67khgti2na3" path="res://sokoban_texturepack/Tilesheet/sokoban_tilesheet.png" id="1_ih71m"]
 [ext_resource type="Script" path="res://tilemap.gd" id="2_44fwm"]
-[ext_resource type="Texture2D" uid="uid://dsmr61ntwrogy" path="res://sokoban_texturepack/PNG/Default size/Player/player_01.png" id="2_71hmj"]
-[ext_resource type="Script" path="res://agent.gd" id="4_skyph"]
+[ext_resource type="Script" path="res://agents_tilemap.gd" id="3_6vvu6"]
+[ext_resource type="Script" path="res://agent_dp.gd" id="4_skyph"]
+[ext_resource type="Script" path="res://agent_mc.gd" id="5_ei11k"]
+[ext_resource type="Script" path="res://btgroup.gd" id="6_dl3n0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_t7ol6"]
 texture = ExtResource("1_ih71m")
@@ -120,6 +122,10 @@ custom_data_layer_1/name = "reward"
 custom_data_layer_1/type = 3
 sources/1 = SubResource("TileSetAtlasSource_t7ol6")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_2catb"]
+atlas = ExtResource("1_ih71m")
+region = Rect2(8.18211, 259.845, 47.3845, 55.8623)
+
 [node name="world" type="Node2D"]
 
 [node name="tilemap" type="TileMapLayer" parent="."]
@@ -127,27 +133,39 @@ tile_map_data = PackedByteArray("AAAAAAAAAQAHAAYAAAAAAAEAAQAHAAYAAAAFAAAAAQAHAAY
 tile_set = SubResource("TileSet_pud5t")
 script = ExtResource("2_44fwm")
 
-[node name="Agent" type="Sprite2D" parent="."]
-position = Vector2(96, 224)
-texture = ExtResource("2_71hmj")
+[node name="agents_tilemap" type="Sprite2D" parent="tilemap"]
+position = Vector2(96, 96)
+texture = SubResource("AtlasTexture_2catb")
+script = ExtResource("3_6vvu6")
+
+[node name="agent_DP" type="Sprite2D" parent="tilemap/agents_tilemap"]
+visible = false
 script = ExtResource("4_skyph")
+
+[node name="agent_MC" type="Sprite2D" parent="tilemap/agents_tilemap"]
+visible = false
+script = ExtResource("5_ei11k")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 zoom = Vector2(1.5, 1.5)
 
-[node name="AgentStartButton1" type="Button" parent="."]
+[node name="btgroup" type="Node2D" parent="."]
+script = ExtResource("6_dl3n0")
+
+[node name="AgentStartButton1" type="Button" parent="btgroup"]
 offset_right = 192.0
 offset_bottom = 31.0
 text = "Start Agent - policy_eval"
 
-[node name="AgentStartButton2" type="Button" parent="."]
+[node name="AgentStartButton2" type="Button" parent="btgroup"]
 offset_top = 32.0
 offset_right = 192.0
 offset_bottom = 63.0
 text = "Start Agent - value_iter"
 
-[node name="ResetButton" type="Button" parent="."]
+[node name="ResetButton" type="Button" parent="btgroup"]
+visible = false
 offset_left = 582.0
 offset_right = 704.0
 offset_bottom = 31.0
