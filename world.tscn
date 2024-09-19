@@ -129,20 +129,22 @@ region = Rect2(8.18211, 259.845, 47.3845, 55.8623)
 [node name="world" type="Node2D"]
 
 [node name="tilemap" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAAAAAAAQAHAAYAAAAAAAEAAQAHAAYAAAAFAAAAAQAHAAYAAAABAAEAAQALAAYAAAABAAIAAQALAAYAAAABAAMAAQALAAYAAAADAAMAAQALAAYAAAAEAAMAAQALAAYAAAADAAIAAQALAAYAAAADAAEAAQALAAYAAAACAAEAAQALAAYAAAABAAAAAQAHAAYAAAACAAAAAQAHAAYAAAADAAAAAQAHAAYAAAAEAAAAAQAHAAYAAAAAAAMAAQAHAAYAAAAAAAIAAQAHAAYAAAACAAIAAQAGAAAAAAACAAMAAQAGAAAAAAACAAQAAQAGAAAAAAAFAAMAAQAGAAAAAAAGAAMAAQAGAAAAAAAHAAMAAQAGAAAAAAAHAAIAAQAGAAAAAAAHAAEAAQAGAAAAAAAIAAEAAQAKAAcAAAAGAAAAAQAHAAYAAAAHAAAAAQAHAAYAAAAIAAAAAQAHAAYAAAAJAAAAAQAHAAYAAAAKAAAAAQAHAAYAAAAKAAEAAQAHAAYAAAAKAAIAAQAHAAYAAAAKAAMAAQAHAAYAAAAKAAQAAQAHAAYAAAAKAAUAAQAHAAYAAAAKAAYAAQAHAAYAAAAJAAYAAQAHAAYAAAAIAAYAAQAHAAYAAAAHAAYAAQAHAAYAAAAGAAYAAQAHAAYAAAAFAAYAAQAHAAYAAAAEAAYAAQAHAAYAAAADAAYAAQAHAAYAAAACAAYAAQAHAAYAAAABAAYAAQAHAAYAAAAAAAYAAQAHAAYAAAAAAAUAAQAHAAYAAAAAAAQAAQAHAAYAAAAEAAEAAQALAAYAAAAGAAEAAQALAAYAAAAFAAIAAQALAAYAAAAEAAIAAQALAAYAAAABAAQAAQALAAYAAAABAAUAAQALAAYAAAACAAUAAQALAAYAAAADAAUAAQALAAYAAAAEAAQAAQALAAYAAAAFAAQAAQALAAYAAAAGAAQAAQALAAYAAAAIAAMAAQALAAYAAAAIAAIAAQALAAYAAAAJAAIAAQALAAYAAAAJAAEAAQALAAYAAAAJAAMAAQALAAYAAAAJAAQAAQALAAYAAAAJAAUAAQALAAYAAAAIAAUAAQALAAYAAAAHAAUAAQALAAYAAAAGAAUAAQALAAYAAAAFAAUAAQALAAYAAAAHAAQAAQAMAAcAAAADAAQAAQALAAYAAAAEAAUAAQAMAAcAAAAGAAIAAQALAAYAAAAFAAEAAQAMAAcAAAAIAAQAAQAMAAcAAAA=")
+unique_name_in_owner = true
+tile_map_data = PackedByteArray("AAAAAAAAAQAHAAYAAAAAAAEAAQAHAAYAAAAFAAAAAQAHAAYAAAABAAEAAQALAAYAAAABAAIAAQALAAYAAAABAAMAAQALAAYAAAADAAMAAQALAAYAAAAEAAMAAQALAAYAAAADAAIAAQALAAYAAAADAAEAAQALAAYAAAACAAEAAQALAAYAAAABAAAAAQAHAAYAAAACAAAAAQAHAAYAAAADAAAAAQAHAAYAAAAEAAAAAQAHAAYAAAAAAAMAAQAHAAYAAAAAAAIAAQAHAAYAAAACAAIAAQAGAAAAAAACAAMAAQALAAYAAAAEAAEAAQAKAAcAAAAEAAIAAQAMAAcAAAAFAAEAAQAHAAYAAAAFAAIAAQAHAAYAAAAFAAMAAQAHAAYAAAAFAAQAAQAHAAYAAAAEAAQAAQAHAAYAAAADAAQAAQAHAAYAAAACAAQAAQAHAAYAAAABAAQAAQAHAAYAAAAAAAQAAQAHAAYAAAA=")
 tile_set = SubResource("TileSet_pud5t")
 script = ExtResource("2_44fwm")
 
-[node name="agents_tilemap" type="Sprite2D" parent="tilemap"]
+[node name="agents_tilemap" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(96, 96)
 texture = SubResource("AtlasTexture_2catb")
 script = ExtResource("3_6vvu6")
 
-[node name="agent_DP" type="Sprite2D" parent="tilemap/agents_tilemap"]
+[node name="agent_DP" type="Sprite2D" parent="agents_tilemap"]
 visible = false
 script = ExtResource("4_skyph")
 
-[node name="agent_MC" type="Sprite2D" parent="tilemap/agents_tilemap"]
+[node name="agent_MC" type="Sprite2D" parent="agents_tilemap"]
 visible = false
 script = ExtResource("5_ei11k")
 
@@ -151,22 +153,34 @@ anchor_mode = 0
 zoom = Vector2(1.5, 1.5)
 
 [node name="btgroup" type="Node2D" parent="."]
+unique_name_in_owner = true
 script = ExtResource("6_dl3n0")
 
-[node name="AgentStartButton1" type="Button" parent="btgroup"]
+[node name="BTDP" type="Button" parent="btgroup"]
+offset_right = 96.0
+offset_bottom = 31.0
+text = "Start DP"
+
+[node name="BTMC" type="Button" parent="btgroup"]
+offset_left = 96.0
 offset_right = 192.0
 offset_bottom = 31.0
-text = "Start Agent - policy_eval"
+text = "Start MC"
 
-[node name="AgentStartButton2" type="Button" parent="btgroup"]
+[node name="one_step" type="Button" parent="btgroup"]
 offset_top = 32.0
-offset_right = 192.0
+offset_right = 96.0
 offset_bottom = 63.0
-text = "Start Agent - value_iter"
+text = "onestep-dp"
 
-[node name="ResetButton" type="Button" parent="btgroup"]
-visible = false
-offset_left = 582.0
-offset_right = 704.0
+[node name="reset_var" type="Button" parent="btgroup"]
+offset_left = 288.0
+offset_right = 384.0
 offset_bottom = 31.0
-text = "reset variables"
+text = "Reset var"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_top = 288.0
+offset_right = 320.0
+offset_bottom = 320.0
+text = "don't forget to set START/GOAL-STATE!!!"

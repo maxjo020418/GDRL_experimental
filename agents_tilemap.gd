@@ -1,10 +1,10 @@
 extends Sprite2D
 class_name AgentsTilemap
 
-signal update_label
+signal update_label(V: Dictionary)
 
-@onready var map: TileMapLayer = $TileMapEnv
-@onready var _buttons: Array[Node] = $BTGroup.get_children()
+@onready var map: TileMapLayer = %tilemap
+@onready var _buttons: Array[Node] = %btgroup.get_children()
 
 var buttons: Dictionary  # {<StringName name of node>: Button}
 
@@ -13,8 +13,8 @@ var buttons: Dictionary  # {<StringName name of node>: Button}
 var V: Dictionary	# Value function results
 var pi: Dictionary	# pi - policy values
 
-# all possible default movements in this env.
-var pi_default = {
+# all possible default movements and possibilities in this env.
+var movements_default = {
 	Vector2i.UP:	.25,
 	Vector2i.DOWN:	.25,
 	Vector2i.RIGHT:	.25,
@@ -22,13 +22,15 @@ var pi_default = {
 }
 
 func _ready() -> void:
-	V = {}
-	pi = pi_default
+	for state: Vector2i in map.get_used_cells():
+		V[state] = 0
+		pi[state] = movements_default
 	
 	for button: Button in _buttons:
 		buttons[button.name] = button
 	
-	print('AgentsTilemap READY')
+	var reset_bt: Button = buttons['reset_var']
+	reset_bt.connect('button_down', cleanup)
 
 ###############################################
 # interface(?) stuff for the Agent classes
@@ -84,3 +86,4 @@ func _unhandled_input(event: InputEvent) -> void:
 func cleanup() -> void:
 	_ready()  # resets variable -> NOTE: might have side effects in some cases
 	move_to(map.START_STATE)
+	update_label.emit(V)
